@@ -57,7 +57,7 @@ namespace PoGo.NecroBot.Logic.State
                 await UseIncubatorsTask.Execute(session, cancellationToken);
             }
 
-            await FarmGymsTask.Execute(session, cancellationToken);
+            //await FarmGymsTask.Execute(session, cancellationToken);
 
             if (session.LogicSettings.UseGpxPathing)
             {

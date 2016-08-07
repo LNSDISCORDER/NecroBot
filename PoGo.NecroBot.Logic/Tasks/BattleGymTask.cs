@@ -19,16 +19,17 @@ namespace PoGo.NecroBot.Logic.Tasks
     {
         public static async Task Execute(ISession session, CancellationToken cancellationToken, FortData currentFortData)
         {
+            bool fighting = true;
             var badassPokemon = await session.Inventory.GetHighestCpForGym(6);
 
             // Start Battle
+            
             var gymInfo =
                 await
                     session.Client.Fort.GetGymDetails(currentFortData.Id, currentFortData.Latitude,
                         currentFortData.Longitude);
 
-            while (gymInfo.GymState.FortData.OwnedByTeam != TeamColor.Neutral ||
-                   gymInfo.GymState.FortData.OwnedByTeam != session.Profile.PlayerData.Team)
+            while (fighting)
             {
                 // Heal pokemon
                 foreach (var pokemon in badassPokemon)
@@ -57,6 +58,7 @@ namespace PoGo.NecroBot.Logic.Tasks
                             case BattleState.TimedOut:
                                 break;
                             case BattleState.Victory:
+                                fighting = false;
                                 break;
                             default:
                                 Debug.WriteLine($"Unhandled result starting gym battle:\n{result.ToString()}");
@@ -72,11 +74,14 @@ namespace PoGo.NecroBot.Logic.Tasks
                     gymInfo = await
                         session.Client.Fort.GetGymDetails(currentFortData.Id, currentFortData.Latitude,
                         currentFortData.Longitude);
+                    if (gymInfo.GymState.FortData.OwnedByTeam == TeamColor.Neutral ||
+                        gymInfo.GymState.FortData.OwnedByTeam == session.Profile.PlayerData.Team)
+                        break;
                 }
             }
             // Finished battling.. OwnedByTeam should be neutral when we reach here
-            if (gymInfo.GymState.FortData.OwnedByTeam != TeamColor.Neutral ||
-                gymInfo.GymState.FortData.OwnedByTeam != session.Profile.PlayerData.Team)
+            if (gymInfo.GymState.FortData.OwnedByTeam == TeamColor.Neutral ||
+                gymInfo.GymState.FortData.OwnedByTeam == session.Profile.PlayerData.Team)
             {
                 await DeployPokemonTask.Execute(session, cancellationToken, currentFortData);
             }
@@ -98,6 +103,7 @@ namespace PoGo.NecroBot.Logic.Tasks
             bool useSpecial = false;
             int loops = 0;
             List<BattleAction> emptyActions = new List<BattleAction>();
+            BattleAction emptyAction = new BattleAction();
 
             while (true)
             {
@@ -107,16 +113,12 @@ namespace PoGo.NecroBot.Logic.Tasks
                         currentFortData.Id,
                         startResponse.BattleId,
                         (loops > 0 ? GetBattleActions(serverMs, useSpecial) : emptyActions),
-                        lastActions.Last()
+                        (loops > 0 ? lastActions.Last() : emptyAction)
                     );
                 loops++;
 
                 if (attackResult.Result == AttackGymResponse.Types.Result.Success)
                 {
-//                    if (attackResult.ActiveAttacker.CurrentEnergy >= 14)
-//                        useSpecial = true;
-//                    else
-//                        useSpecial = false;
 
                     switch (attackResult.BattleLog.State)
                     {
@@ -166,6 +168,7 @@ namespace PoGo.NecroBot.Logic.Tasks
             return UnixEpoch.AddMilliseconds(millis);
         }
 
+
         public static List<BattleAction> GetBattleActions(long millis, bool useSpecial)
         {
             List<BattleAction> actions = new List<BattleAction>();
@@ -176,7 +179,7 @@ namespace PoGo.NecroBot.Logic.Tasks
 
                 if (x == 2 && useSpecial)
                 {
-                    now = now.AddMilliseconds(3500);
+                    now = now.AddMilliseconds(3400);
                     action.Type = BattleActionType.ActionSpecialAttack;
                     action.DurationMs = 3300;
                 }
