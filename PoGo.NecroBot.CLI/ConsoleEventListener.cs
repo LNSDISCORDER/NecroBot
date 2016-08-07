@@ -117,12 +117,47 @@ namespace PoGo.NecroBot.CLI
             int intTimeForArrival = (int) ( fortTargetEvent.Distance / ( session.LogicSettings.WalkingSpeedInKilometerPerHour * 0.277778 ) );
 
             Logger.Write(
-                session.Translation.GetTranslation(TranslationString.EventFortTargeted, fortTargetEvent.Name,
+                session.Translation.GetTranslation(TranslationString.EventFortTargeted, fortTargetEvent.Type.ToString(), fortTargetEvent.Name,
                     Math.Round(fortTargetEvent.Distance), intTimeForArrival ),
                 LogLevel.Info, ConsoleColor.DarkRed);
         }
 
-        private static void HandleEvent(PokemonCaptureEvent pokemonCaptureEvent, ISession session)
+        public void HandleEvent(EventGymDiscovered evt, ISession session)
+        {
+            Logger.Write(
+                session.Translation.GetTranslation(TranslationString.EventGymDiscovered, evt.Name, evt.Team, evt.Count),
+                LogLevel.Gym, ConsoleColor.Gray);
+        }
+        public void HandleEvent(EventGymDefending evt, ISession session)
+        {
+            Logger.Write(
+                session.Translation.GetTranslation(TranslationString.EventGymDefending, evt.Trainer, evt.TrainerLevel, evt.PokemonId, evt.PokemonCp),
+                LogLevel.Gym, ConsoleColor.Gray);
+        }
+        public void HandleEvent(EventGymDeployed evt, ISession session)
+        {
+            Logger.Write(
+                session.Translation.GetTranslation(TranslationString.EventGymDeployed, evt.PokemonId, evt.PokemonCp, evt.Gym),
+                LogLevel.Gym, ConsoleColor.Gray);
+        }
+
+        public void HandleEvent(EventUsedPotion evt, ISession session)
+        {
+            Logger.Write(
+                session.Translation.GetTranslation(TranslationString.EventUsedPotion, evt.Type, evt.PokemonId,
+                    evt.PokemonCp, evt.Remaining),
+                LogLevel.Potion, ConsoleColor.DarkYellow);
+        }
+
+        public void HandleEvent(EventUsedRevive evt, ISession session)
+        {
+            Logger.Write(
+                session.Translation.GetTranslation(TranslationString.EventUsedRevive, evt.Type, evt.PokemonId,
+                    evt.PokemonCp, evt.Remaining),
+                LogLevel.Revive, ConsoleColor.DarkYellow);
+        }
+
+    private static void HandleEvent(PokemonCaptureEvent pokemonCaptureEvent, ISession session)
         {
             Func<ItemId, string> returnRealBallName = a =>
             {
