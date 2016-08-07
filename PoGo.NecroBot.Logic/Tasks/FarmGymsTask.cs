@@ -113,6 +113,7 @@ namespace PoGo.NecroBot.Logic.Tasks
 
         public static async Task ProcessGym(ISession session, CancellationToken cancellationToken, FortData currentFortData)
         {
+            bool ignoreGym = false;
             var gymInfo = await session.Client.Fort.GetGymDetails(currentFortData.Id, currentFortData.Latitude,
                 currentFortData.Longitude);
 
@@ -125,6 +126,9 @@ namespace PoGo.NecroBot.Logic.Tasks
 
             foreach (var defendingPokemon in gymInfo.GymState.Memberships)
             {
+                if (session.Profile.PlayerData.Username.Equals(defendingPokemon.TrainerPublicProfile.Name))
+                    ignoreGym = true;
+
                 session.EventDispatcher.Send(new EventGymDefending
                 {
                     PokemonId = defendingPokemon.PokemonData.PokemonId.ToString(),
@@ -133,16 +137,15 @@ namespace PoGo.NecroBot.Logic.Tasks
                     TrainerLevel = defendingPokemon.TrainerPublicProfile.Level
                 });
             }
+            if (ignoreGym)
+                return;
 
             // Deploy Pokemon To Gym
             if (gymInfo.GymState.FortData.OwnedByTeam == session.Profile.PlayerData.Team ||
                 gymInfo.GymState.FortData.OwnedByTeam == TeamColor.Neutral)
             {
                 // Gym is owned by our team
-                if (gymInfo.GymState.Memberships.Count <= 4)
-                {
-                    await DeployPokemonTask.Execute(session, cancellationToken, currentFortData);
-                }
+                await DeployPokemonTask.Execute(session, cancellationToken, currentFortData);
             }
             else
             {
