@@ -88,7 +88,7 @@ namespace PoGo.NecroBot.Logic.Tasks
             var pokeStops = mapObjects.Item1.MapCells.SelectMany(i => i.Forts)
                 .Where(
                     i =>
-                        (i.Type == FortType.Checkpoint || i.Type == FortType.Checkpoint) &&
+                        (i.Type == FortType.Checkpoint || i.Type == FortType.Gym) &&
                         i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime() &&
                         ( // Make sure PokeStop is within 40 meters or else it is pointless to hit it
                             LocationUtils.CalculateDistanceInMeters(
