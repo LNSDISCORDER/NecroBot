@@ -35,6 +35,14 @@ namespace PoGo.NecroBot.CLI.Models
 
         internal static string New;
 
+        internal static string Gym;
+
+        internal static string Potion;
+
+        internal static string Revive;
+
+        
+
         internal static void SetStrings(ISession session)
         {
             Attention =
@@ -56,6 +64,18 @@ namespace PoGo.NecroBot.CLI.Models
             Error =
                 session?.Translation.GetTranslation(
                     TranslationString.LogEntryError) ?? "ERROR";
+
+            Gym =
+                session?.Translation.GetTranslation(
+                    TranslationString.LogEntryGym) ?? "GYM";
+
+            Potion =
+                session?.Translation.GetTranslation(
+                    TranslationString.LogEntryPotion) ?? "POTION";
+
+            Revive =
+                session?.Translation.GetTranslation(
+                    TranslationString.LogEntryRevive) ?? "REVIVE";
 
             Evolved =
                 session?.Translation.GetTranslation(

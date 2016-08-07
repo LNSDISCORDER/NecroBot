@@ -99,8 +99,20 @@ namespace PoGo.NecroBot.CLI
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] ({LoggingStrings.Egg}) {message}");
                     break;
-                case LogLevel.Debug:
+                case LogLevel.Gym:
                     Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] ({LoggingStrings.Gym}) {message}");
+                    break;
+                case LogLevel.Potion:
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] ({LoggingStrings.Potion}) {message}");
+                    break;
+                case LogLevel.Revive:
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] ({LoggingStrings.Revive}) {message}");
+                    break;
+                case LogLevel.Debug:
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] ({LoggingStrings.Debug}) {message}");
                     break;
                 case LogLevel.Update:
