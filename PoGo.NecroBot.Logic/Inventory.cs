@@ -275,8 +275,14 @@ namespace PoGo.NecroBot.Logic
             return pokemons.OrderByDescending(PokemonInfo.CalculatePokemonPerfection).Take(limit);
         }
 
+        public async Task<IEnumerable<PokemonData>> GetHighestCpForGym(int limit)
+        {
+            var myPokemon = await GetPokemons();
+            var pokemons = myPokemon.Where(i => !i.DeployedFortId.Any());
+            return pokemons.OrderByDescending(x => x.Cp).ThenBy(n => n.StaminaMax).Take(limit);
+        }
 
-        public async Task<int> GetItemAmountByType(ItemId type)
+    public async Task<int> GetItemAmountByType(ItemId type)
         {
             var pokeballs = await GetItems();
             return pokeballs.FirstOrDefault(i => i.ItemId == type)?.Count ?? 0;

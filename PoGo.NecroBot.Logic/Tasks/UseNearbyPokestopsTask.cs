@@ -41,27 +41,41 @@ namespace PoGo.NecroBot.Logic.Tasks
 
                 var fortInfo = await session.Client.Fort.GetFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
 
-                var fortSearch =
-                    await session.Client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
-
-                if (fortSearch.ExperienceAwarded > 0)
+                switch (fortInfo.Type)
                 {
-                    session.EventDispatcher.Send(new FortUsedEvent
-                    {
-                        Id = pokeStop.Id,
-                        Name = fortInfo.Name,
-                        Exp = fortSearch.ExperienceAwarded,
-                        Gems = fortSearch.GemsAwarded,
-                        Items = StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded),
-                        Latitude = pokeStop.Latitude,
-                        Longitude = pokeStop.Longitude
-                    });
+                    case FortType.Checkpoint:
+                        var fortSearch =
+                            await session.Client.Fort.SearchFort(pokeStop.Id, pokeStop.Latitude, pokeStop.Longitude);
+
+                        if (fortSearch.ExperienceAwarded > 0)
+                        {
+                            session.EventDispatcher.Send(new FortUsedEvent
+                            {
+                                Id = pokeStop.Id,
+                                Name = fortInfo.Name,
+                                Exp = fortSearch.ExperienceAwarded,
+                                Gems = fortSearch.GemsAwarded,
+                                Items = StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded),
+                                Latitude = pokeStop.Latitude,
+                                Longitude = pokeStop.Longitude
+                            });
+                        }
+
+                        if (session.LogicSettings.TransferDuplicatePokemon)
+                        {
+                            await TransferDuplicatePokemonTask.Execute(session, cancellationToken);
+                        }
+                        break;
+
+                    case FortType.Gym:
+                        await FarmGymsTask.ProcessGym(session, cancellationToken, pokeStop);
+                        break;
+
+                    default:
+                        break;
                 }
 
-                if (session.LogicSettings.TransferDuplicatePokemon)
-                {
-                    await TransferDuplicatePokemonTask.Execute(session, cancellationToken);
-                }
+                
             }
         }
 
@@ -74,7 +88,7 @@ namespace PoGo.NecroBot.Logic.Tasks
             var pokeStops = mapObjects.Item1.MapCells.SelectMany(i => i.Forts)
                 .Where(
                     i =>
-                        i.Type == FortType.Checkpoint &&
+                        (i.Type == FortType.Checkpoint || i.Type == FortType.Gym) &&
                         i.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime() &&
                         ( // Make sure PokeStop is within 40 meters or else it is pointless to hit it
                             LocationUtils.CalculateDistanceInMeters(
