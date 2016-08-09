@@ -74,8 +74,6 @@ namespace PoGo.NecroBot.Logic.Tasks
                     default:
                         break;
                 }
-
-                
             }
         }
 
