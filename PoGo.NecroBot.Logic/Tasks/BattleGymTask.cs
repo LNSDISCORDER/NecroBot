@@ -39,6 +39,7 @@ namespace PoGo.NecroBot.Logic.Tasks
                     if (pokemon.Stamina < pokemon.StaminaMax)
                         await DeployPokemonTask.HealPokemon(session, pokemon);
                 }
+                Thread.Sleep(4000);
 
                 var result = await StartBattle(session, badassPokemon, currentFortData);
                 if (result != null)
@@ -69,6 +70,7 @@ namespace PoGo.NecroBot.Logic.Tasks
                     {
                         Debug.WriteLine($"Hmmm, no result?");
                         Thread.Sleep(5000);
+                        continue;
                     }
 
                     gymInfo = await
@@ -79,6 +81,7 @@ namespace PoGo.NecroBot.Logic.Tasks
                         break;
                 }
             }
+
             // Finished battling.. OwnedByTeam should be neutral when we reach here
             if (gymInfo.GymState.FortData.OwnedByTeam == TeamColor.Neutral ||
                 gymInfo.GymState.FortData.OwnedByTeam == session.Profile.PlayerData.Team)
@@ -90,6 +93,8 @@ namespace PoGo.NecroBot.Logic.Tasks
                 Debug.WriteLine($"Hmmm, for some reason the gym was not taken over...");
             }
         }
+
+        private static int currentAttackerEnergy = 0;
 
         private static async Task AttackGym(ISession session, CancellationToken cancellationToken, FortData currentFortData, StartGymBattleResponse startResponse)
         {
@@ -112,7 +117,7 @@ namespace PoGo.NecroBot.Logic.Tasks
                     (
                         currentFortData.Id,
                         startResponse.BattleId,
-                        (loops > 0 ? GetBattleActions(serverMs, useSpecial) : emptyActions),
+                        (loops > 0 ? GetActions(serverMs, currentAttackerEnergy) : emptyActions),
                         (loops > 0 ? lastActions.Last() : emptyAction)
                     );
                 loops++;
@@ -123,6 +128,7 @@ namespace PoGo.NecroBot.Logic.Tasks
                     switch (attackResult.BattleLog.State)
                     {
                         case BattleState.Active:
+                            currentAttackerEnergy = attackResult.ActiveAttacker.CurrentEnergy;
                             Debug.WriteLine(
                                 $"Successful attack! - They have {attackResult.ActiveDefender.CurrentHealth} health left, we have {attackResult.ActiveAttacker.CurrentHealth} health, energy: {attackResult.ActiveAttacker.CurrentEnergy}");
                             break;
@@ -168,34 +174,64 @@ namespace PoGo.NecroBot.Logic.Tasks
             return UnixEpoch.AddMilliseconds(millis);
         }
 
-
-        public static List<BattleAction> GetBattleActions(long millis, bool useSpecial)
+        private static int pos = 0;
+        public static List<BattleAction> GetActions(long serverMs, int energy)
         {
+            Random rnd = new Random();
             List<BattleAction> actions = new List<BattleAction>();
-            DateTime now = DateTimeFromUnixTimestampMillis(millis);
-            for (int x = 0; x < 3; x++)
+            DateTime now = DateTimeFromUnixTimestampMillis(serverMs);
+            Debug.WriteLine($"AttackGym Count: {pos}");
+            switch (pos)
             {
-                BattleAction action = new BattleAction();
+                case 0:
+                    for (int x = 0; x < 13; x++)
+                    {
+                        BattleAction action = new BattleAction();
+                        now = now.AddMilliseconds(500);
+                        action.Type = BattleActionType.ActionAttack;
+                        action.DurationMs = 500;
+                        action.ActionStartMs = now.ToUnixTime();
+                        action.TargetIndex = -1;
+                        actions.Add(action);
+                    }
+                    pos++;
+                    break;
 
-                if (x == 2 && useSpecial)
-                {
-                    now = now.AddMilliseconds(3400);
-                    action.Type = BattleActionType.ActionSpecialAttack;
-                    action.DurationMs = 3300;
-                }
-                else
-                {
-                    now = now.AddMilliseconds(600);
-                    action.Type = BattleActionType.ActionAttack;
-                    action.DurationMs = 500;
-                }
+                case 1:
+                    pos++;
+                    break;
 
+                case 2:
+                    for (int x = 0; x < 4; x++)
+                    {
+                        BattleAction action = new BattleAction();
+                        now = now.AddMilliseconds(500);
+                        action.Type = BattleActionType.ActionAttack;
+                        action.DurationMs = 500;
+                        action.ActionStartMs = now.ToUnixTime();
+                        action.TargetIndex = -1;
+                        actions.Add(action);
+                    }
+                    pos++;
+                    break;
 
-                action.ActionStartMs = now.ToUnixTime();
-                action.TargetIndex = -1;
+                case 4:
+                    pos++;
+                    break;
 
-                Debug.WriteLine($"Attack {x} using AttackStartMs: {action.ActionStartMs}");
-                actions.Add(action);
+                default:
+                    for (int x = 0; x < 3; x++)
+                    {
+                        BattleAction action = new BattleAction();
+                        now = now.AddMilliseconds(500);
+                        action.Type = BattleActionType.ActionAttack;
+                        action.DurationMs = 500;
+                        action.ActionStartMs = now.ToUnixTime();
+                        action.TargetIndex = -1;
+                        actions.Add(action);
+                    }
+                    pos++;
+                    break;
             }
 
             return actions;
@@ -233,6 +269,7 @@ namespace PoGo.NecroBot.Logic.Tasks
                             return result;
                         case BattleState.Victory:
                             Debug.WriteLine($"We were victorious");
+                            pos = 0;
                             return result;
                         case BattleState.StateUnset:
                             Debug.WriteLine($"Error occoured: {result.BattleLog.State}");
