@@ -279,6 +279,13 @@ namespace PoGo.NecroBot.Logic
             return pokemons.OrderByDescending(x => x.Cp).ThenBy(n => n.StaminaMax).Take(limit);
         }
 
+        public async Task<IEnumerable<PokemonData>> GetDeployedPokemon()
+        {
+            var myPokemon = await GetPokemons();
+            var pokemons = myPokemon.Where(i => i.DeployedFortId.Any());
+            return pokemons.OrderByDescending(x => x.Cp).ThenBy(n => n.StaminaMax);
+        }
+
         public async Task<int> GetItemAmountByType(ItemId type)
         {
             var pokeballs = await GetItems();

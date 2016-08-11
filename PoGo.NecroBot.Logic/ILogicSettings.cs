@@ -139,6 +139,9 @@ namespace PoGo.NecroBot.Logic
         bool RenameOnlyAboveIv { get; }
         float FavoriteMinIvPercentage { get; }
         bool AutoFavoritePokemon { get; }
+        bool DeployPokemonsToGym { get; }
+        bool BattleGyms { get; }
+        int CollectCoinsOnDeployed { get; }
         string RenameTemplate { get; }
         int AmountOfPokemonToDisplayOnStart { get; }
         string TranslationLanguageCode { get; }

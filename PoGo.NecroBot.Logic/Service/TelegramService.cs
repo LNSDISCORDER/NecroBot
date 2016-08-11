@@ -157,8 +157,9 @@ namespace PoGo.NecroBot.Logic.Service
                             await session.Inventory.GetItemAmountByType(ItemId.ItemIncenseCool) +
                             await session.Inventory.GetItemAmountByType(ItemId.ItemIncenseFloral),
                             await session.Inventory.GetItemAmountByType(ItemId.ItemLuckyEgg),
-                            await session.Inventory.GetItemAmountByType(ItemId.ItemTroyDisk)
-                        });
+                            await session.Inventory.GetItemAmountByType(ItemId.ItemTroyDisk),
+                            (from currency in session.Profile.PlayerData.Currencies where currency.Name.ToLower().Contains("pokecoin") select currency.Amount).FirstOrDefault()
+            });
                     SendMessage(message.Chat.Id, answerTextmessage);
                     break;
                 default:

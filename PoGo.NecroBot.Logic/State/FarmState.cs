@@ -58,7 +58,8 @@ namespace PoGo.NecroBot.Logic.State
                 await LevelUpPokemonTask.Execute(session, cancellationToken);
             }
 
-            await FarmGymsTask.Execute(session, cancellationToken);
+            if (session.LogicSettings.BattleGyms || session.LogicSettings.DeployPokemonsToGym)
+                await FarmGymsTask.Execute(session, cancellationToken);
 
             if (session.LogicSettings.UseGpxPathing)
             {

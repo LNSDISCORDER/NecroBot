@@ -207,7 +207,8 @@ namespace PoGo.NecroBot.Logic.Tasks
                         break;
 
                     case FortType.Gym:
-                        await FarmGymsTask.ProcessGym(session, cancellationToken, pokeStop);
+                        if (session.LogicSettings.BattleGyms || session.LogicSettings.DeployPokemonsToGym)
+                            await FarmGymsTask.ProcessGym(session, cancellationToken, pokeStop);
                         break;
 
                     default:

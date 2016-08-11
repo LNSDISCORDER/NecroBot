@@ -99,6 +99,7 @@
     <Compile Include="Event\DisplayHighestsPokemonEvent.cs" />
     <Compile Include="Event\EggHatchedEvent.cs" />
     <Compile Include="Event\EggsListEvent.cs" />
+    <Compile Include="Event\EventCollectedCoins.cs" />
     <Compile Include="Event\EventDispatcher.cs" />
     <Compile Include="Event\EventGymDefending.cs" />
     <Compile Include="Event\EventGymDeployed.cs" />
