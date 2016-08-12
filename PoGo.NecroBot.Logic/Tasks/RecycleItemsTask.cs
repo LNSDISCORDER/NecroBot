@@ -9,6 +9,9 @@ using POGOProtos.Inventory.Item;
 using System.Threading;
 using System.Threading.Tasks;
 using System;
+using System.Diagnostics;
+using System.Linq;
+using POGOProtos.Data.Player;
 
 #endregion
 
@@ -68,10 +71,11 @@ namespace PoGo.NecroBot.Logic.Tasks
                 await session.Inventory.GetItemAmountByType(ItemId.ItemIncenseFloral);
             var currentAmountOfLuckyEggs = await session.Inventory.GetItemAmountByType(ItemId.ItemLuckyEgg);
             var currentAmountOfLures = await session.Inventory.GetItemAmountByType(ItemId.ItemTroyDisk);
+            var currentAmountOfPokecoins = (from currency in session.Profile.PlayerData.Currencies where currency.Name.ToLower().Contains("pokecoin") select currency.Amount).FirstOrDefault();
 
             if (session.LogicSettings.DetailedCountsBeforeRecycling)
                 Logger.Write(session.Translation.GetTranslation(TranslationString.CurrentMiscItemInv,
-                    currentAmountOfBerries, currentAmountOfIncense, currentAmountOfLuckyEggs, currentAmountOfLures));
+                    currentAmountOfBerries, currentAmountOfIncense, currentAmountOfLuckyEggs, currentAmountOfLures, currentAmountOfPokecoins));
 
             if (session.LogicSettings.TotalAmountOfPokeballsToKeep != 0)
                 await OptimizedRecycleBalls(session, cancellationToken);

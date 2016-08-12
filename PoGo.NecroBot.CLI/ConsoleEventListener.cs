@@ -141,6 +141,13 @@ namespace PoGo.NecroBot.CLI
                 LogLevel.Gym, ConsoleColor.Gray);
         }
 
+        public void HandleEvent(EventCollectedCoins evt, ISession session)
+        {
+            Logger.Write(
+                session.Translation.GetTranslation(TranslationString.CollectedPokecoins, evt.Coins),
+                LogLevel.Info, ConsoleColor.Yellow);
+        }
+
         public void HandleEvent(EventUsedPotion evt, ISession session)
         {
             Logger.Write(

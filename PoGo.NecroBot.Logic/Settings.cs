@@ -462,6 +462,14 @@ namespace PoGo.NecroBot.Logic
         public float FavoriteMinIvPercentage;
         [DefaultValue(false)]
         public bool AutoFavoritePokemon;
+        //gyms
+        [DefaultValue(false)]
+        public bool BattleGyms;
+        [DefaultValue(true)]
+        public bool DeployPokemonsToGym;
+        [DefaultValue(5)]
+        public int CollectCoinsOnDeployed;
+
         //notcatch
         [DefaultValue(false)]
         public bool UsePokemonToNotCatchFilter;
@@ -1279,6 +1287,9 @@ namespace PoGo.NecroBot.Logic
         public bool RenameOnlyAboveIv => _settings.RenameOnlyAboveIv;
         public float FavoriteMinIvPercentage => _settings.FavoriteMinIvPercentage;
         public bool AutoFavoritePokemon => _settings.AutoFavoritePokemon;
+        public bool DeployPokemonsToGym => _settings.DeployPokemonsToGym;
+        public bool BattleGyms => _settings.BattleGyms;
+        public int CollectCoinsOnDeployed => _settings.CollectCoinsOnDeployed;
         public string RenameTemplate => _settings.RenameTemplate;
         public int AmountOfPokemonToDisplayOnStart => _settings.AmountOfPokemonToDisplayOnStart;
         public bool DumpPokemonStats => _settings.DumpPokemonStats;

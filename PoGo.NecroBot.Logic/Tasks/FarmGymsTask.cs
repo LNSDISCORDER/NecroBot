@@ -14,6 +14,7 @@ using PoGo.NecroBot.Logic.Utils;
 using PokemonGo.RocketAPI.Extensions;
 using POGOProtos.Enums;
 using POGOProtos.Map.Fort;
+using POGOProtos.Networking.Responses;
 
 namespace PoGo.NecroBot.Logic.Tasks
 {
@@ -124,6 +125,34 @@ namespace PoGo.NecroBot.Logic.Tasks
                 Team = gymInfo.GymState.FortData.OwnedByTeam.ToString()
             });
 
+            // Collect Defender Pokecoins If Available
+            if (session.LogicSettings.CollectCoinsOnDeployed > 0)
+            {
+                var coinsAvailable = session.Profile.PlayerData.DailyBonus.NextDefenderBonusCollectTimestampMs;
+                if (DateTime.UtcNow.ToUnixTime() > coinsAvailable)
+                {
+                    var deployedPokemon = await session.Inventory.GetDeployedPokemon();
+                    if (deployedPokemon.Count() >= session.LogicSettings.CollectCoinsOnDeployed)
+                    {
+                        var collectResponse = await session.Client.Player.CollectDailyDefenderBonus();
+                        if (collectResponse.Result == CollectDailyDefenderBonusResponse.Types.Result.Success)
+                        {
+                            Debug.WriteLine($"Coin collect response:\n{collectResponse.ToString()}");
+                            session.EventDispatcher.Send(new EventCollectedCoins
+                            {
+                                Coins = collectResponse.CurrencyAwarded.FirstOrDefault()
+                            });
+                        }
+                    }
+                    else
+                        Debug.WriteLine($"We need {session.LogicSettings.CollectCoinsOnDeployed} deployed pokemon to collect coins, we have {deployedPokemon.Count()} deployed.");
+
+                }
+                else
+                    Debug.WriteLine($"We can collect coins next at: {BattleGymTask.DateTimeFromUnixTimestampMillis(coinsAvailable)}");
+            }
+
+            // Process Gym
             foreach (var defendingPokemon in gymInfo.GymState.Memberships)
             {
                 if (session.Profile.PlayerData.Username.Equals(defendingPokemon.TrainerPublicProfile.Name))
@@ -145,12 +174,14 @@ namespace PoGo.NecroBot.Logic.Tasks
                 gymInfo.GymState.FortData.OwnedByTeam == TeamColor.Neutral)
             {
                 // Gym is owned by our team
-                await DeployPokemonTask.Execute(session, cancellationToken, currentFortData);
+                if (session.LogicSettings.DeployPokemonsToGym)
+                    await DeployPokemonTask.Execute(session, cancellationToken, currentFortData);
             }
             else
             {
                 // Battle Gym ??
-                //await BattleGymTask.Execute(session, cancellationToken, currentFortData);
+                if (session.LogicSettings.BattleGyms)
+                    await BattleGymTask.Execute(session, cancellationToken, currentFortData);
             }
         }
 

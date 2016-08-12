@@ -11,6 +11,7 @@ using POGOProtos.Data;
 using POGOProtos.Inventory.Item;
 using POGOProtos.Map.Fort;
 using POGOProtos.Networking.Responses;
+using Telegram.Bot.Helpers;
 
 namespace PoGo.NecroBot.Logic.Tasks
 {

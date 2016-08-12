@@ -105,7 +105,6 @@ namespace PoGo.NecroBot.Logic.Tasks
 
             Debug.WriteLine($"Gym battle started; fighting trainer: {startResponse.Defender.TrainerPublicProfile.Name}");
             Debug.WriteLine($"We are attacking: {startResponse.Defender.ActivePokemon.PokemonData.PokemonId}");
-            bool useSpecial = false;
             int loops = 0;
             List<BattleAction> emptyActions = new List<BattleAction>();
             BattleAction emptyAction = new BattleAction();
