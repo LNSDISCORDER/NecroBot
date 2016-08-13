@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using PoGo.NecroBot.Logic.Common;
+using PoGo.NecroBot.Logic.Logging;
 using PoGo.NecroBot.Logic.State;
 using POGOProtos.Inventory.Item;
-using PoGo.NecroBot.Logic.Logging;
-using PoGo.NecroBot.Logic.Common;
 using POGOProtos.Networking.Responses;
 
 namespace PoGo.NecroBot.Logic.Tasks
@@ -12,8 +12,9 @@ namespace PoGo.NecroBot.Logic.Tasks
     {
         public static async Task Execute(ISession session, CancellationToken cancellationToken)
         {
-            if (!session.LogicSettings.UseLuckyEggConstantly)
-                return;
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await session.Inventory.RefreshCachedInventory();
 
             var currentAmountOfLuckyEggs = await session.Inventory.GetItemAmountByType(ItemId.ItemLuckyEgg);
             if (currentAmountOfLuckyEggs == 0)

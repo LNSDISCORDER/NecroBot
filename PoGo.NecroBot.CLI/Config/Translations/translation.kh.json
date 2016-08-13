@@ -2,64 +2,83 @@
   "TranslationStrings": [
     {
       "Key": "pokeball",
-      "Value": "PokéBall"
+      "Value": "បាល់ Poke"
     },
     {
       "Key": "greatPokeball",
-      "Value": "GreatBall"
+      "Value": "បាល់់ Great"
     },
     {
       "Key": "ultraPokeball",
-      "Value": "UltraBall"
+      "Value": "បាល់ Ultra"
     },
     {
       "Key": "masterPokeball",
-      "Value": "MasterBall"
+      "Value": "បាល់ Master"
     },
     {
       "Key": "wrongAuthType",
-      "Value": "Authenticatie type is onbekend."
+      "Value": "ព៍តមាន (AuthType) មិនត្រឺមត្រូវក្នុងឯកសារ config.json"
+
+    },
+    {
+      "Key": "loginInvalid",
+      "Value": "ព៌តមាន​មិនត្រឺមត្រូវនឺងមិនអាចចូលគណនីបាន។"
+
     },
     {
       "Key": "farmPokestopsOutsideRadius",
-      "Value":
-        "Buiten het ingestelde bereik beland! Terug naar beginpunt ({0}m weg) in 5 seconden. Klopt je LastPos.ini bestand?"
+      "Value": "អ្នកនៅក្រៅប្រវែងកំណត់ ({0} ម៉ែត)។ នឺងចាំផ្ដើមដើរក្នុងរយះពេល​ ៥វិនាទី។ តើឯកសារ LastPos.ini ត្រឺមត្រូវដែររឺទេ?"
+
     },
     {
       "Key": "farmPokestopsNoUsableFound",
-      "Value": "Geen geschikte PokéStops gevonden in je omgeving. Is je bereik te klein?"
+      "Value": "គ្មាន PokeStop នៅជុំវិញទីនេះទេ។ ប្រហែលជាចម្ងាយអតិរមាតូចពេកទេដឺង?"
+
     },
     {
       "Key": "eventFortUsed",
-      "Value": "XP: {0}, Gems: {1}, Items: {2}"
+      "Value": "ឈ្មោះ: {0} XP: {1}, ត្បូង: {2}, អីវ៉ាន់: {3}, រយះទទឺង: {4}, រយះបណ្ដោយ: {5}"
+
     },
     {
       "Key": "eventFortFailed",
-      "Value": "Items verzamelen mislukt, mogelijke softban. Opnieuw proberen: {0}/40"
+      "Value": "ឈ្មោះ: {0} ដំណឺង: មិនអាចទាយយកបាន, ប្រហែលត្រូវការពិន័យ. អនុញ្ញាតក្នុង: {1}/{2}"
+
     },
     {
       "Key": "eventFortTargeted",
-      "Value": "{0} over ({1}m)"
+      "Value": "ធ្វើដំណើរទៅ PokeStop: {0} ({1}វិនារទី)"
+
     },
     {
       "Key": "eventProfileLogin",
-      "Value": "Ingelogd als {0}"
+      "Value": "ឈ្មោះនាក់លេង {0}"
+
+    },
+    {
+      "Key": "eventUsedIncense",
+      "Value": "បានប្រើ Incense, នៅសល់ពេលវេលារ: {0}"
+
     },
     {
       "Key": "eventUsedLuckyEgg",
-      "Value": "Lucky Egg gebruikt, resterend: {0}"
+      "Value": "បានប្រើ Lucky Egg, នៅសល់ពេលវេលារ: {0}"
+
     },
     {
       "Key": "eventPokemonEvolvedSuccess",
-      "Value": "{0} successvol voor {1}xp"
+      "Value": "{0} បានសំរាច់ចំនួន {1}​xp"
+
     },
     {
       "Key": "eventPokemonEvolvedFailed",
-      "Value": "Mislukt {0}. Resultaat was {1}, gestopt met evolueren {2}"
+      "Value": "បរាជ័យ {0} បានលទ្ធផល {1}  បញ្ឈប់​ evolving {2}"
+
     },
     {
       "Key": "eventPokemonTransferred",
-      "Value": "{0}\t- CP: {1}  IV: {2}%   [Beste CP: {3}  IV: {4}%] (Candies: {5})"
+      "Value": "{0}\t- CP: {1}  IV: {2}%   [CP ល្ធ: {3}  IV: {4}%] (ស្ករគ្រាប់: {5})"
     },
     {
       "Key": "eventItemRecycled",
@@ -67,19 +86,19 @@
     },
     {
       "Key": "eventPokemonCaptureSuccess",
-      "Value": "({0}) | ({1}) {2} Lvl: {3} CP: ({4}/{5}) IV: {6}% | Kans: {7}% | {8}m ver | met een {9} ({10} over). | {11} EXP verdiend | {12} | lat: {13} long: {14}"
+      "Value": "({0}) | ({1}) {2} Lvl: {3} CP: ({4}/{5}) IV: {6}% | ឪកាស: {7}% | ចម្ងាយ {8}m | ជាមួយ a {9} (នៅសល់ {10} ទៀត). | បទពិសោធន៏ទទួលបាន {11}xp | {12} | រយះទទឺង: {13} រយះបណ្ដោយ: {14}"
     },
     {
       "Key": "eventPokemonCaptureFailed",
-      "Value": "({0}) | ({1}) {2} Lvl: {3} CP: ({4}/{5}) IV: {6}% | Kans: {7}% | {8}m ver | met een {9} ({10} over). | lat: {11} long: {12}"
+      "Value": "({0}) | ({1}) {2} Lvl: {3} CP: ({4}/{5}) IV: {6}% | ឪកាស: {7}% | ចម្ងាយ {8}m | ជាមួយ a {9} (នៅសល់ {10} ទៀត). | រយះទទឺង: {11} រយះបណ្ដោយ: {12}"
     },
     {
       "Key": "eventNoPokeballs",
-      "Value": "Geen Pokéballen meer - Een {0} met CP {1} misgelopen "
+      "Value": "គ្មាន បាល់poke - មិនអាចចាប់ {0} ដែលមាន CP {1}"
     },
     {
       "Key": "catchStatusAttempt",
-      "Value": "{0} Poging #{1}"
+      "Value": "{0} ព្យាយាម #{1}"
     },
     {
       "Key": "catchStatus",
@@ -87,47 +106,27 @@
     },
     {
       "Key": "candies",
-      "Value": "Candies: {0}"
+      "Value": "ស្ករគ្រាប់: {0}"
     },
     {
-      "Key": "unhandledGpxData",
-      "Value": "Ongehanteerde data in GPX bestand, poging tot overslaan."
+      "Key": "Proxied",
+      "Value": "Your IP is: {0} | Proxy IP is: {1}"
     },
     {
-      "Key": "displayHighestsHeader",
-      "Value": "Pokémons"
+      "Key": "FixProxySettings",
+      "Value": "Press any key to exit so you can fix your proxy settings..."
     },
     {
-      "Key": "commonWordPerfect",
-      "Value": "perfect"
+      "Key": "Unproxied",
+      "Value": " Your IP is: {0}"
     },
     {
-      "Key": "commonWordName",
-      "Value": "naam"
+      "Key": "HighestsPokemoHeader",
+      "Value": "====== {0} ======"
     },
     {
-      "Key": "displayHighestsCpHeader",
-      "Value": "Top Pokémons met de Hoogste CP"
-    },
-    {
-      "Key": "displayHighestsPerfectHeader",
-      "Value": "Top Perfecte Pokémons"
-    },
-    {
-      "Key": "displayHighestsLevelHeader",
-      "Value": "Top Pokémons met het hoogste Level"
-    },
-    {
-      "Key": "welcomeWarning",
-      "Value": "Controleer of Lat & Lng kloppen. Sluit de bot af als dat niet zo is! Lat: {0} Lng: {1}"
-    },
-    {
-      "Key": "incubatorPuttingEgg",
-      "Value": "Ei in broedmachine stoppen: {0:0.00}km resterend"
-    },
-    {
-      "Key": "incubatorStatusUpdate",
-      "Value": "Broedmachine status update: {0:0.00}km resterend"
+      "Key": "HighestsPokemoCell",
+      "Value": "# CP {0}/{1} | ({2}% {3})\t| Lvl {4}\t {5}: {6}\t {7}: {8} {9}: {10} {11}: {12}"
     }
   ],
 	"PokemonStrings": [
